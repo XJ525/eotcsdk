@@ -35,7 +35,7 @@ var _SOLIDITY_TYPE_MAXIMA, _FACTORY_ADDRESSES, _PAIR_ADDRESSES;
   Rounding[Rounding["ROUND_UP"] = 2] = "ROUND_UP";
 })(exports.Rounding || (exports.Rounding = {}));
 
-var INIT_CODE_HASH = '0x278d8201610c32bb650c43e9c27bb9124680c6c6b82d65d58a4117c055f01573';
+var INIT_CODE_HASH = '0xf18ab5ba2b2ea93d5f80bbf9f1f4b2ccc8ad443571e6a3af023346a5dd669249';
 var MINIMUM_LIQUIDITY = /*#__PURE__*/JSBI.BigInt(1000); // exports for internal consumption
 
 var ZERO = /*#__PURE__*/JSBI.BigInt(0);
@@ -56,7 +56,7 @@ var SolidityType;
 
 var SOLIDITY_TYPE_MAXIMA = (_SOLIDITY_TYPE_MAXIMA = {}, _SOLIDITY_TYPE_MAXIMA[SolidityType.uint8] = /*#__PURE__*/JSBI.BigInt('0xff'), _SOLIDITY_TYPE_MAXIMA[SolidityType.uint256] = /*#__PURE__*/JSBI.BigInt('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'), _SOLIDITY_TYPE_MAXIMA); // @TRON only
 
-var FACTORY_ADDRESSES = (_FACTORY_ADDRESSES = {}, _FACTORY_ADDRESSES[exports.ChainId.NILE] = '0x41da32ec09fb54ab5f5742f1eb730003caac0bbf', _FACTORY_ADDRESSES[exports.ChainId.MAINNET] = '0x1d0721d247497593a400d01b02ada3be1129730d', _FACTORY_ADDRESSES[exports.ChainId.SHASTA] = '0xb9fe040dd98a9718805c976f8a899ef17b0f43ed', _FACTORY_ADDRESSES); // @TRON
+var FACTORY_ADDRESSES = (_FACTORY_ADDRESSES = {}, _FACTORY_ADDRESSES[exports.ChainId.NILE] = '0x227044d0cd57e257b15c8c3bd5608e241b8b02ca', _FACTORY_ADDRESSES[exports.ChainId.MAINNET] = '0x1d0721d247497593a400d01b02ada3be1129730d', _FACTORY_ADDRESSES[exports.ChainId.SHASTA] = '0xb9fe040dd98a9718805c976f8a899ef17b0f43ed', _FACTORY_ADDRESSES); // @TRON
 
 function buildPairAddresses(list) {
   var res = {};
@@ -502,7 +502,7 @@ function currencyEquals(currencyA, currencyB) {
 
 var WETH = (_WETH = {}, _WETH[exports.ChainId.MAINNET] = /*#__PURE__*/new Token( // Deployed by Tron Foundation
 // https://tronscan.io/#/token20/TNUC9Qb1rRpS5CbWLmNMxXBjyFoydXjWFR/code
-exports.ChainId.MAINNET, '0x891cdb91d149f23b1a45d9c5ca78a88d0cb44c18', 6, 'WTRX', 'Wrapped TRX'), _WETH[exports.ChainId.NILE] = /*#__PURE__*/new Token(exports.ChainId.NILE, '0x8f44113A985076431b77f6078f0929f949cB8836', 6, 'WTRX', 'Wrapped Tron'), _WETH[exports.ChainId.SHASTA] = /*#__PURE__*/new Token(exports.ChainId.SHASTA, '0xA73FB788C5A6EF2BDB5FF621BC06F3CC8FF01A2A', 6, 'WTRX', 'Wrapped Tron'), _WETH);
+exports.ChainId.MAINNET, '0x891cdb91d149f23b1a45d9c5ca78a88d0cb44c18', 6, 'WTRX', 'Wrapped TRX'), _WETH[exports.ChainId.NILE] = /*#__PURE__*/new Token(exports.ChainId.NILE, '0xfb3b3134f13ccd2c81f4012e53024e8135d58fee', 6, 'WTRX', 'Wrapped Tron'), _WETH[exports.ChainId.SHASTA] = /*#__PURE__*/new Token(exports.ChainId.SHASTA, '0xA73FB788C5A6EF2BDB5FF621BC06F3CC8FF01A2A', 6, 'WTRX', 'Wrapped Tron'), _WETH);
 
 var _toSignificantRoundin, _toFixedRounding;
 var Decimal = /*#__PURE__*/toFormat(_Decimal);

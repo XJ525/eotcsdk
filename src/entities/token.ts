@@ -68,7 +68,7 @@ export const WETH = {
     'WTRX',
     'Wrapped TRX'
   ),
-  [ChainId.NILE]: new Token(ChainId.NILE, '0x8f44113A985076431b77f6078f0929f949cB8836', 6, 'WTRX', 'Wrapped Tron'),
+  [ChainId.NILE]: new Token(ChainId.NILE, '0xfb3b3134f13ccd2c81f4012e53024e8135d58fee', 6, 'WTRX', 'Wrapped Tron'),
   // TODO(tron): didnt deploy on shasta yet...
   [ChainId.SHASTA]: new Token(ChainId.SHASTA, '0xA73FB788C5A6EF2BDB5FF621BC06F3CC8FF01A2A', 6, 'WTRX', 'Wrapped Tron')
 }
