@@ -85,10 +85,10 @@ export const PAIR_ADDRESSES: { [chainId: string]: PairAddresses } = {
       '0x02a6a10E4C7750a7F8dC159b95936B574c211f0D'
     ],
     [
-      // USDT/BTT
+      // USDT/EOTC
       '0xea51342dabbb928ae1e576bd39eff8aaf070a8c6', //USDT
-      '0x8df49db5dbf07e498492d2dafcf7b305cdc72471', // BTT
-      '0xc42d071906a67282a485abd30c44e47165d19e71' //pair
+      '0x2129f037eb93a9a36eac7e2a0fb981f3ad3d0ae8', // EOTC
+      '0x025629d29f3b7686a2ab28bfd3b48ad29fbb691c' //pair
     ]
   ]),
   [ChainId.MAINNET]: buildPairAddresses([
