@@ -96,19 +96,19 @@ export class Pair {
   private static getAddressWarning(tokenA: Token, tokenB: Token): void {
     if (this.warningWasDisplayedOnce) return
     this.warningWasDisplayedOnce = true
-    const message = [
-      `Unknown pair contract address for pair ${tokenA.symbol}/${tokenB.symbol} `,
-      `(${tokenA.address}, ${tokenB.address}). `,
-      'Open an issue at https://github.com/mcswap/swap-sdk/issues ',
-      'with this error message to get the pair added. ',
-      'You can also add the pair to PAIR_ADDRESSES in ',
-      'https://github.com/mcswap/swap-sdk/blob/master/src/constants.ts ',
-      'and send a pull request (if you know how!).'
-    ].join('')
+    // const message = [
+    //   `Unknown pair contract address for pair ${tokenA.symbol}/${tokenB.symbol} `,
+    //   `(${tokenA.address}, ${tokenB.address}). `,
+    //   'Open an issue at https://github.com/mcswap/swap-sdk/issues ',
+    //   'with this error message to get the pair added. ',
+    //   'You can also add the pair to PAIR_ADDRESSES in ',
+    //   'https://github.com/mcswap/swap-sdk/blob/master/src/constants.ts ',
+    //   'and send a pull request (if you know how!).'
+    // ].join('')
     if (typeof window === 'undefined') {
-      console.warn(message)
+      console.warn(tokenA,tokenB)
     } else {
-      alert(message)
+      // alert(message)
     }
   }
 
