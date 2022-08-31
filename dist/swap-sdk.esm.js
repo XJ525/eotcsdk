@@ -35,7 +35,7 @@ var Rounding;
   Rounding[Rounding["ROUND_UP"] = 2] = "ROUND_UP";
 })(Rounding || (Rounding = {}));
 
-var INIT_CODE_HASH = '0xf18ab5ba2b2ea93d5f80bbf9f1f4b2ccc8ad443571e6a3af023346a5dd669249';
+var INIT_CODE_HASH = '0x515ceede630d54ea899e245e075fe1f8d2574639cfb3fbc20c70fa8b8d9bb884';
 var MINIMUM_LIQUIDITY = /*#__PURE__*/JSBI.BigInt(1000); // exports for internal consumption
 
 var ZERO = /*#__PURE__*/JSBI.BigInt(0);
@@ -56,7 +56,7 @@ var SolidityType;
 
 var SOLIDITY_TYPE_MAXIMA = (_SOLIDITY_TYPE_MAXIMA = {}, _SOLIDITY_TYPE_MAXIMA[SolidityType.uint8] = /*#__PURE__*/JSBI.BigInt('0xff'), _SOLIDITY_TYPE_MAXIMA[SolidityType.uint256] = /*#__PURE__*/JSBI.BigInt('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'), _SOLIDITY_TYPE_MAXIMA); // @TRON only
 
-var FACTORY_ADDRESSES = (_FACTORY_ADDRESSES = {}, _FACTORY_ADDRESSES[ChainId.NILE] = '0x227044d0cd57e257b15c8c3bd5608e241b8b02ca', _FACTORY_ADDRESSES[ChainId.MAINNET] = '0x1d0721d247497593a400d01b02ada3be1129730d', _FACTORY_ADDRESSES[ChainId.SHASTA] = '0xb9fe040dd98a9718805c976f8a899ef17b0f43ed', _FACTORY_ADDRESSES); // @TRON
+var FACTORY_ADDRESSES = (_FACTORY_ADDRESSES = {}, _FACTORY_ADDRESSES[ChainId.NILE] = '0x227044d0cd57e257b15c8c3bd5608e241b8b02ca', _FACTORY_ADDRESSES[ChainId.MAINNET] = '0x1005efd7a0ad2ce129479e7f1eb084494510e170', _FACTORY_ADDRESSES[ChainId.SHASTA] = '0xb9fe040dd98a9718805c976f8a899ef17b0f43ed', _FACTORY_ADDRESSES); // @TRON
 
 function buildPairAddresses(list) {
   var res = {};
