@@ -4,13 +4,13 @@ import invariant from 'tiny-invariant'
 import { Contract } from '@ethersproject/contracts'
 import { BaseProvider } from '@ethersproject/providers'
 import JSBI from 'jsbi'
-// import { pack, keccak256 } from '@ethersproject/solidity'
-// import { getCreate2Address } from '@ethersproject/address'
+import { pack, keccak256 } from '@ethersproject/solidity'
+import { getCreate2Address } from '@ethersproject/address'
 
 import {
   BigintIsh,
   // FACTORY_ADDRESS,
-  // INIT_CODE_HASH,
+  INIT_CODE_HASH,
   MINIMUM_LIQUIDITY,
   ZERO,
   ONE,
@@ -25,7 +25,7 @@ import { sqrt, parseBigintIsh } from '../utils'
 import { InsufficientReservesError, InsufficientInputAmountError } from '../errors'
 import { Token } from './token'
 
-// let PAIR_ADDRESS_CACHE: { [token0Address: string]: { [token1Address: string]: string } } = {}
+let PAIR_ADDRESS_CACHE: { [token0Address: string]: { [token1Address: string]: string } } = {}
 
 function getFactoryContract(chainId: ChainId, provider: BaseProvider): Contract {
   // memoize?
@@ -91,6 +91,25 @@ export class Pair {
     return PAIR_ADDRESS_CACHE[tokens[0].address][tokens[1].address]
   }
   */
+  public static getAddress(tokenA: Token, tokenB: Token): string {
+    const tokens = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA] // does safety checks
+
+    if (PAIR_ADDRESS_CACHE?.[tokens[0].address]?.[tokens[1].address] === undefined) {
+      PAIR_ADDRESS_CACHE = {
+        ...PAIR_ADDRESS_CACHE,
+        [tokens[0].address]: {
+          ...PAIR_ADDRESS_CACHE?.[tokens[0].address],
+          [tokens[1].address]: getCreate2Address(
+            FACTORY_ADDRESSES[tokenA.chainId],
+            keccak256(['bytes'], [pack(['address', 'address'], [tokens[0].address, tokens[1].address])]),
+            INIT_CODE_HASH
+          )
+        }
+      }
+    }
+
+    return PAIR_ADDRESS_CACHE[tokens[0].address][tokens[1].address]
+  }
 
   private static warningWasDisplayedOnce: boolean = false
   private static getAddressWarning(tokenA: Token, tokenB: Token): void {
@@ -106,7 +125,7 @@ export class Pair {
     //   'and send a pull request (if you know how!).'
     // ].join('')
     if (typeof window === 'undefined') {
-      console.warn(tokenA,tokenB)
+      console.warn(tokenA, tokenB)
     } else {
       // alert(message)
     }
@@ -115,7 +134,7 @@ export class Pair {
   // @TRON
   // create2 opcode not available :(
   // For now we just hardcode all pair addresses... :/
-  public static getAddress(tokenA: Token, tokenB: Token): string {
+  public static getAddressTRON(tokenA: Token, tokenB: Token): string {
     // An alternative solution would be to make `getAddress` async (see getAddressAsync for an attempt) but it would require a relatively
     // large refactor of both swap-interface and swap-sdk...
     // console.warn('getAddress() is mocked with hardcoded swapv2 pair addresses until TVM implements create2 op code...')
