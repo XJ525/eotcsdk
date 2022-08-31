@@ -6,9 +6,10 @@ import { Token } from './token';
 export declare class Pair {
     readonly liquidityToken: Token;
     private readonly tokenAmounts;
+    static getAddress(tokenA: Token, tokenB: Token): string;
     private static warningWasDisplayedOnce;
     private static getAddressWarning;
-    static getAddress(tokenA: Token, tokenB: Token): string;
+    static getAddressTRON(tokenA: Token, tokenB: Token): string;
     static getAddressAsync(tokenA: Token, tokenB: Token, provider: BaseProvider): Promise<string>;
     constructor(tokenAmountA: TokenAmount, tokenAmountB: TokenAmount);
     /**

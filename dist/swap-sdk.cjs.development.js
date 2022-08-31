@@ -12,6 +12,7 @@ var _Big = _interopDefault(require('big.js'));
 var toFormat = _interopDefault(require('toformat'));
 var _Decimal = _interopDefault(require('decimal.js-light'));
 var contracts = require('@ethersproject/contracts');
+var solidity = require('@ethersproject/solidity');
 var networks = require('@ethersproject/networks');
 var providers = require('@ethersproject/providers');
 var IUniswapV2Pair = _interopDefault(require('@mcswap/mcswap-v2-core/build/contracts/IUniswapV2Pair.json'));
@@ -87,27 +88,69 @@ function buildPairAddresses(list) {
 var PAIR_ADDRESSES = (_PAIR_ADDRESSES = {}, _PAIR_ADDRESSES[exports.ChainId.NILE] = /*#__PURE__*/buildPairAddresses([[// DTKN/WTRX
 '0x42c142500ff7068f326c01a8f1b3cd8ea7d9377f', '0x8f44113a985076431b77f6078f0929f949cb8836', '0x02a6a10E4C7750a7F8dC159b95936B574c211f0D'], [// USDT/EOTC
 '0xea51342dabbb928ae1e576bd39eff8aaf070a8c6', '0x2129f037eb93a9a36eac7e2a0fb981f3ad3d0ae8', '0x025629d29f3b7686a2ab28bfd3b48ad29fbb691c' //pair
-]]), _PAIR_ADDRESSES[exports.ChainId.MAINNET] = /*#__PURE__*/buildPairAddresses([[// TRX/USDT
-'0x891CDB91D149F23B1A45D9C5CA78A88D0CB44C18', '0xA614F803B6FD780986A42C78EC9C7F77E6DED13C', '0xE01FF0B9B3862E0FACB4D4BC7320DE6F2C2B354F' // Pair
-], [// TRX/ETH
-'0x53908308F4AA220FB10D778B5D1B34489CD6EDFC', '0x891CDB91D149F23B1A45D9C5CA78A88D0CB44C18', '0x06D84F4E79F6927DC2C283092873986DBC9C3C30' // Pair
-], [// ETH/USDT
-'0x53908308F4AA220FB10D778B5D1B34489CD6EDFC', '0xA614F803B6FD780986A42C78EC9C7F77E6DED13C', '0x1213E3DA3A5175F7D0D0313113EF12E37C4A98CF' // Pair
-], [// ETH/HKMC
-'0x53908308F4AA220FB10D778B5D1B34489CD6EDFC', '0x68B0AD0B1FB3811BE676B05047A5A43F8170BAC1', '0x7B10898C51F16CEB6D8C52CBDB31E43F0D55A8B7' // Pair
-], [// TRX/HKMC
-'0x68B0AD0B1FB3811BE676B05047A5A43F8170BAC1', '0x891CDB91D149F23B1A45D9C5CA78A88D0CB44C18', '0x56A59AC0FEA1BC021909B0CAEC608C86629BC3B2' // Pair
-], [// BTC/USDT
-'0x84716914C0FDF7110A44030D04D0C4923504D9CC', '0xA614F803B6FD780986A42C78EC9C7F77E6DED13C', '0xA034E2AC4E914FA5D0A2EE8107D3C1384B51DB1D' // Pair
-], [// BTC/HKMC
-'0x68B0AD0B1FB3811BE676B05047A5A43F8170BAC1', '0x84716914C0FDF7110A44030D04D0C4923504D9CC', '0x68198BCF82EF0C35E522BEE459D48D6FFF40432F' // Pair
-], [// USDT/HKMC
-'0x68B0AD0B1FB3811BE676B05047A5A43F8170BAC1', '0xA614F803B6FD780986A42C78EC9C7F77E6DED13C', '0xE844013B3EA22B5773D643786A1FCC9849C88961' // Pair
-], [// BTC/ETH
-'0x53908308F4AA220FB10D778B5D1B34489CD6EDFC', '0x84716914C0FDF7110A44030D04D0C4923504D9CC', '0x6151451BD833836694C5295C5A7AC88389D2374A' // Pair
-], [// TRX/BTC
-'0x84716914C0FDF7110A44030D04D0C4923504D9CC', '0x891CDB91D149F23B1A45D9C5CA78A88D0CB44C18', '0xE77332FF3BCE27E41396F4FA3C4C87D00B8CE958' // Pair
-]]), _PAIR_ADDRESSES[exports.ChainId.SHASTA] = /*#__PURE__*/buildPairAddresses([[// TRX/USDT
+]]), _PAIR_ADDRESSES[exports.ChainId.MAINNET] = /*#__PURE__*/buildPairAddresses([[// USDT/EOTC
+'0xa614f803b6fd780986a42c78ec9c7f77e6ded13c', '0xdfe9d10781d0e48bcc03f0fda2067e45aec6a144', '0x025629d29f3b7686a2ab28bfd3b48ad29fbb691c' //pair
+] // [
+//   // TRX/USDT
+//   '0x891CDB91D149F23B1A45D9C5CA78A88D0CB44C18', // WTRX
+//   '0xA614F803B6FD780986A42C78EC9C7F77E6DED13C', // USDT
+//   '0xE01FF0B9B3862E0FACB4D4BC7320DE6F2C2B354F' // Pair
+// ],
+// [
+//   // TRX/ETH
+//   '0x53908308F4AA220FB10D778B5D1B34489CD6EDFC', // ETH
+//   '0x891CDB91D149F23B1A45D9C5CA78A88D0CB44C18', // WTRX
+//   '0x06D84F4E79F6927DC2C283092873986DBC9C3C30' // Pair
+// ],
+// [
+//   // ETH/USDT
+//   '0x53908308F4AA220FB10D778B5D1B34489CD6EDFC', // ETH
+//   '0xA614F803B6FD780986A42C78EC9C7F77E6DED13C', // USDT
+//   '0x1213E3DA3A5175F7D0D0313113EF12E37C4A98CF' // Pair
+// ],
+// [
+//   // ETH/HKMC
+//   '0x53908308F4AA220FB10D778B5D1B34489CD6EDFC', // ETH
+//   '0x68B0AD0B1FB3811BE676B05047A5A43F8170BAC1', // HKMC
+//   '0x7B10898C51F16CEB6D8C52CBDB31E43F0D55A8B7' // Pair
+// ],
+// [
+//   // TRX/HKMC
+//   '0x68B0AD0B1FB3811BE676B05047A5A43F8170BAC1', // HKMC
+//   '0x891CDB91D149F23B1A45D9C5CA78A88D0CB44C18', // WTRX
+//   '0x56A59AC0FEA1BC021909B0CAEC608C86629BC3B2' // Pair
+// ],
+// [
+//   // BTC/USDT
+//   '0x84716914C0FDF7110A44030D04D0C4923504D9CC', // BTC
+//   '0xA614F803B6FD780986A42C78EC9C7F77E6DED13C', // USDT
+//   '0xA034E2AC4E914FA5D0A2EE8107D3C1384B51DB1D' // Pair
+// ],
+// [
+//   // BTC/HKMC
+//   '0x68B0AD0B1FB3811BE676B05047A5A43F8170BAC1', // HKMC
+//   '0x84716914C0FDF7110A44030D04D0C4923504D9CC', // BTC
+//   '0x68198BCF82EF0C35E522BEE459D48D6FFF40432F' // Pair
+// ],
+// [
+//   // USDT/HKMC
+//   '0x68B0AD0B1FB3811BE676B05047A5A43F8170BAC1', // HKMC
+//   '0xA614F803B6FD780986A42C78EC9C7F77E6DED13C', // USDT
+//   '0xE844013B3EA22B5773D643786A1FCC9849C88961' // Pair
+// ],
+// [
+//   // BTC/ETH
+//   '0x53908308F4AA220FB10D778B5D1B34489CD6EDFC', // ETH
+//   '0x84716914C0FDF7110A44030D04D0C4923504D9CC', // BTC
+//   '0x6151451BD833836694C5295C5A7AC88389D2374A' // Pair
+// ],
+// [
+//   // TRX/BTC
+//   '0x84716914C0FDF7110A44030D04D0C4923504D9CC', // BTC
+//   '0x891CDB91D149F23B1A45D9C5CA78A88D0CB44C18', // WTRX
+//   '0xE77332FF3BCE27E41396F4FA3C4C87D00B8CE958' // Pair
+// ]
+]), _PAIR_ADDRESSES[exports.ChainId.SHASTA] = /*#__PURE__*/buildPairAddresses([[// TRX/USDT
 '0xA73FB788C5A6EF2BDB5FF621BC06F3CC8FF01A2A', '0xD7377F28E13C4B255CD532E8182C0EF0F332E33F', '0x0A5F4F46453AC545250BA305FDEF1D36EF3E8AAB'], [// TRX/ETH
 '0xA73FB788C5A6EF2BDB5FF621BC06F3CC8FF01A2A', '0x4D59F65BA2D66D80F321E66BE5DF152E71AA302F', '0x385EA972AFF458B32A35A7E9487747DEAF1AF054'], [// TRX/BTC
 '0xA73FB788C5A6EF2BDB5FF621BC06F3CC8FF01A2A', '0x0B511B28D410B729D9D1502445FC1DAFE3B52810', '0x7FEB8618565CE2085A7C6A03BEDB5BC9A5DFB999'], [// TRX/HKMC
@@ -820,6 +863,8 @@ var Price = /*#__PURE__*/function (_Fraction) {
   return Price;
 }(Fraction);
 
+var PAIR_ADDRESS_CACHE = {};
+
 function getFactoryContract(chainId, provider) {
   // memoize?
   var address = FACTORY_ADDRESSES[chainId]; // todo: put abi in constants?
@@ -855,7 +900,44 @@ var Pair = /*#__PURE__*/function () {
     ? [tokenAmountA, tokenAmountB] : [tokenAmountB, tokenAmountA];
     this.liquidityToken = new Token(tokenAmounts[0].token.chainId, Pair.getAddress(tokenAmounts[0].token, tokenAmounts[1].token), 18, 'WMC-V2', 'MCSwap V2');
     this.tokenAmounts = tokenAmounts;
+  } // @TRON
+
+  /*
+  public static getAddress(tokenA: Token, tokenB: Token): string {
+    const tokens = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA] // does safety checks
+       if (PAIR_ADDRESS_CACHE?.[tokens[0].address]?.[tokens[1].address] === undefined) {
+      PAIR_ADDRESS_CACHE = {
+        ...PAIR_ADDRESS_CACHE,
+        [tokens[0].address]: {
+          ...PAIR_ADDRESS_CACHE?.[tokens[0].address],
+          // @TODO(tron): this will not work cause our contract does not
+          // use create2
+          [tokens[1].address]: getCreate2Address(
+            FACTORY_ADDRESS,
+            keccak256(['bytes'], [pack(['address', 'address'], [tokens[0].address, tokens[1].address])]),
+            INIT_CODE_HASH
+          )
+        }
+      }
+    }
+       return PAIR_ADDRESS_CACHE[tokens[0].address][tokens[1].address]
   }
+  */
+
+
+  Pair.getAddress = function getAddress(tokenA, tokenB) {
+    var _PAIR_ADDRESS_CACHE, _PAIR_ADDRESS_CACHE$t;
+
+    var tokens = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]; // does safety checks
+
+    if (((_PAIR_ADDRESS_CACHE = PAIR_ADDRESS_CACHE) === null || _PAIR_ADDRESS_CACHE === void 0 ? void 0 : (_PAIR_ADDRESS_CACHE$t = _PAIR_ADDRESS_CACHE[tokens[0].address]) === null || _PAIR_ADDRESS_CACHE$t === void 0 ? void 0 : _PAIR_ADDRESS_CACHE$t[tokens[1].address]) === undefined) {
+      var _PAIR_ADDRESS_CACHE2, _extends2, _extends3;
+
+      PAIR_ADDRESS_CACHE = _extends({}, PAIR_ADDRESS_CACHE, (_extends3 = {}, _extends3[tokens[0].address] = _extends({}, (_PAIR_ADDRESS_CACHE2 = PAIR_ADDRESS_CACHE) === null || _PAIR_ADDRESS_CACHE2 === void 0 ? void 0 : _PAIR_ADDRESS_CACHE2[tokens[0].address], (_extends2 = {}, _extends2[tokens[1].address] = address.getCreate2Address(FACTORY_ADDRESSES[tokenA.chainId], solidity.keccak256(['bytes'], [solidity.pack(['address', 'address'], [tokens[0].address, tokens[1].address])]), INIT_CODE_HASH), _extends2)), _extends3));
+    }
+
+    return PAIR_ADDRESS_CACHE[tokens[0].address][tokens[1].address];
+  };
 
   Pair.getAddressWarning = function getAddressWarning(tokenA, tokenB) {
     if (this.warningWasDisplayedOnce) return;
@@ -877,7 +959,7 @@ var Pair = /*#__PURE__*/function () {
   // For now we just hardcode all pair addresses... :/
   ;
 
-  Pair.getAddress = function getAddress(tokenA, tokenB) {
+  Pair.getAddressTRON = function getAddressTRON(tokenA, tokenB) {
     var _pairAddresses$tokens;
 
     // An alternative solution would be to make `getAddress` async (see getAddressAsync for an attempt) but it would require a relatively
@@ -1078,32 +1160,7 @@ var Pair = /*#__PURE__*/function () {
   }]);
 
   return Pair;
-}(); // @TRON
-
-/*
-public static getAddress(tokenA: Token, tokenB: Token): string {
-  const tokens = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA] // does safety checks
-
-  if (PAIR_ADDRESS_CACHE?.[tokens[0].address]?.[tokens[1].address] === undefined) {
-    PAIR_ADDRESS_CACHE = {
-      ...PAIR_ADDRESS_CACHE,
-      [tokens[0].address]: {
-        ...PAIR_ADDRESS_CACHE?.[tokens[0].address],
-        // @TODO(tron): this will not work cause our contract does not
-        // use create2
-        [tokens[1].address]: getCreate2Address(
-          FACTORY_ADDRESS,
-          keccak256(['bytes'], [pack(['address', 'address'], [tokens[0].address, tokens[1].address])]),
-          INIT_CODE_HASH
-        )
-      }
-    }
-  }
-
-  return PAIR_ADDRESS_CACHE[tokens[0].address][tokens[1].address]
-}
-*/
-
+}();
 Pair.warningWasDisplayedOnce = false;
 
 var Route = /*#__PURE__*/function () {
