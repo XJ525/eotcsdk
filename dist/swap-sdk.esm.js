@@ -509,11 +509,7 @@ function getCreate2Address(from, salt, initCodeHash) {
     logger.throwArgumentError("initCodeHash must be 32 bytes", "initCodeHash", initCodeHash);
   }
 
-<<<<<<< HEAD
   return getAddress(hexDataSlice(keccak256(concat(["0x41", getAddress(from), salt, initCodeHash])), 12));
-=======
-  return getAddress(hexDataSlice(keccak256(concat(["0xff", getAddress(from), salt, initCodeHash])), 12));
->>>>>>> e66d2b37a9bbd747abbf77dd2bfa3786d7fa9aa6
 }
 
 function validateSolidityTypeInstance(value, solidityType) {
