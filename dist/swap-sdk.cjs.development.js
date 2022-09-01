@@ -7,7 +7,12 @@ function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'defau
 var JSBI = _interopDefault(require('jsbi'));
 var invariant = _interopDefault(require('tiny-invariant'));
 var warning = _interopDefault(require('tiny-warning'));
-var address = require('@ethersproject/address');
+var bn_js = require('bn.js');
+var bytes = require('@ethersproject/bytes');
+require('@ethersproject/bignumber');
+var keccak256 = require('@ethersproject/keccak256');
+require('@ethersproject/rlp');
+var logger$1 = require('@ethersproject/logger');
 var _Big = _interopDefault(require('big.js'));
 var toFormat = _interopDefault(require('toformat'));
 var _Decimal = _interopDefault(require('decimal.js-light'));
@@ -379,18 +384,146 @@ var InsufficientInputAmountError = /*#__PURE__*/function (_Error2) {
   return InsufficientInputAmountError;
 }( /*#__PURE__*/_wrapNativeSuper(Error));
 
+var version = "address/5.0.3";
+
+var logger = /*#__PURE__*/new logger$1.Logger(version);
+
+function getChecksumAddress(address) {
+  if (!bytes.isHexString(address, 20)) {
+    logger.throwArgumentError("invalid address", "address", address);
+  }
+
+  address = address.toLowerCase();
+  var chars = address.substring(2).split("");
+  var expanded = new Uint8Array(40);
+
+  for (var i = 0; i < 40; i++) {
+    expanded[i] = chars[i].charCodeAt(0);
+  }
+
+  var hashed = bytes.arrayify(keccak256.keccak256(expanded));
+
+  for (var _i = 0; _i < 40; _i += 2) {
+    if (hashed[_i >> 1] >> 4 >= 8) {
+      chars[_i] = chars[_i].toUpperCase();
+    }
+
+    if ((hashed[_i >> 1] & 0x0f) >= 8) {
+      chars[_i + 1] = chars[_i + 1].toUpperCase();
+    }
+  }
+
+  return "0x" + chars.join("");
+} // Shims for environments that are missing some required constants and functions
+
+
+var MAX_SAFE_INTEGER = 0x1fffffffffffff;
+
+function log10(x) {
+  if (Math.log10) {
+    return Math.log10(x);
+  }
+
+  return Math.log(x) / Math.LN10;
+} // See: https://en.wikipedia.org/wiki/International_Bank_Account_Number
+// Create lookup table
+
+
+var ibanLookup = {};
+
+for (var i = 0; i < 10; i++) {
+  ibanLookup[/*#__PURE__*/String(i)] = /*#__PURE__*/String(i);
+}
+
+for (var _i2 = 0; _i2 < 26; _i2++) {
+  ibanLookup[/*#__PURE__*/String.fromCharCode(65 + _i2)] = /*#__PURE__*/String(10 + _i2);
+} // How many decimal digits can we process? (for 64-bit float, this is 15)
+
+
+var safeDigits = /*#__PURE__*/Math.floor( /*#__PURE__*/log10(MAX_SAFE_INTEGER));
+
+function ibanChecksum(address) {
+  address = address.toUpperCase();
+  address = address.substring(4) + address.substring(0, 2) + "00";
+  var expanded = address.split("").map(function (c) {
+    return ibanLookup[c];
+  }).join(""); // Javascript can handle integers safely up to 15 (decimal) digits
+
+  while (expanded.length >= safeDigits) {
+    var block = expanded.substring(0, safeDigits);
+    expanded = parseInt(block, 10) % 97 + expanded.substring(block.length);
+  }
+
+  var checksum = String(98 - parseInt(expanded, 10) % 97);
+
+  while (checksum.length < 2) {
+    checksum = "0" + checksum;
+  }
+
+  return checksum;
+}
+function getAddress(address) {
+  var result = null;
+
+  if (typeof address !== "string") {
+    logger.throwArgumentError("invalid address", "address", address);
+  }
+
+  if (address.match(/^(0x)?[0-9a-fA-F]{40}$/)) {
+    // Missing the 0x prefix
+    if (address.substring(0, 2) !== "0x") {
+      address = "0x" + address;
+    }
+
+    result = getChecksumAddress(address); // It is a checksummed address with a bad checksum
+
+    if (address.match(/([A-F].*[a-f])|([a-f].*[A-F])/) && result !== address) {
+      logger.throwArgumentError("bad address checksum", "address", address);
+    } // Maybe ICAP? (we only support direct mode)
+
+  } else if (address.match(/^XE[0-9]{2}[0-9A-Za-z]{30,31}$/)) {
+    // It is an ICAP address with a bad checksum
+    if (address.substring(2, 4) !== ibanChecksum(address)) {
+      logger.throwArgumentError("bad icap checksum", "address", address);
+    }
+
+    result = new bn_js.BN(address.substring(4), 36).toString(16);
+
+    while (result.length < 40) {
+      result = "0" + result;
+    }
+
+    result = getChecksumAddress("0x" + result);
+  } else {
+    logger.throwArgumentError("invalid address", "address", address);
+  }
+
+  return result;
+}
+function getCreate2Address(from, salt, initCodeHash) {
+  if (bytes.hexDataLength(salt) !== 32) {
+    logger.throwArgumentError("salt must be 32 bytes", "salt", salt);
+  }
+
+  if (bytes.hexDataLength(initCodeHash) !== 32) {
+    logger.throwArgumentError("initCodeHash must be 32 bytes", "initCodeHash", initCodeHash);
+  }
+
+  return getAddress(bytes.hexDataSlice(keccak256.keccak256(bytes.concat(["0xff", getAddress(from), salt, initCodeHash])), 12));
+}
+
 function validateSolidityTypeInstance(value, solidityType) {
   !JSBI.greaterThanOrEqual(value, ZERO) ?  invariant(false, value + " is not a " + solidityType + ".")  : void 0;
   !JSBI.lessThanOrEqual(value, SOLIDITY_TYPE_MAXIMA[solidityType]) ?  invariant(false, value + " is not a " + solidityType + ".")  : void 0;
 } // warns if addresses are not checksummed
 
-function validateAndParseAddress(address$1) {
+function validateAndParseAddress(address) {
   try {
-    var checksummedAddress = address.getAddress(address$1);
-    "development" !== "production" ? warning(address$1 === checksummedAddress, address$1 + " is not checksummed.") : void 0;
+    var checksummedAddress = getAddress(address);
+    "development" !== "production" ? warning(address === checksummedAddress, address + " is not checksummed.") : void 0;
     return checksummedAddress;
   } catch (error) {
-      invariant(false, address$1 + " is not a valid address.")  ;
+      invariant(false, address + " is not a valid address.")  ;
   }
 }
 function parseBigintIsh(bigintIsh) {
@@ -933,7 +1066,7 @@ var Pair = /*#__PURE__*/function () {
     if (((_PAIR_ADDRESS_CACHE = PAIR_ADDRESS_CACHE) === null || _PAIR_ADDRESS_CACHE === void 0 ? void 0 : (_PAIR_ADDRESS_CACHE$t = _PAIR_ADDRESS_CACHE[tokens[0].address]) === null || _PAIR_ADDRESS_CACHE$t === void 0 ? void 0 : _PAIR_ADDRESS_CACHE$t[tokens[1].address]) === undefined) {
       var _PAIR_ADDRESS_CACHE2, _extends2, _extends3;
 
-      PAIR_ADDRESS_CACHE = _extends({}, PAIR_ADDRESS_CACHE, (_extends3 = {}, _extends3[tokens[0].address] = _extends({}, (_PAIR_ADDRESS_CACHE2 = PAIR_ADDRESS_CACHE) === null || _PAIR_ADDRESS_CACHE2 === void 0 ? void 0 : _PAIR_ADDRESS_CACHE2[tokens[0].address], (_extends2 = {}, _extends2[tokens[1].address] = address.getCreate2Address(FACTORY_ADDRESSES[tokenA.chainId], solidity.keccak256(['bytes'], [solidity.pack(['address', 'address'], [tokens[0].address, tokens[1].address])]), INIT_CODE_HASH), _extends2)), _extends3));
+      PAIR_ADDRESS_CACHE = _extends({}, PAIR_ADDRESS_CACHE, (_extends3 = {}, _extends3[tokens[0].address] = _extends({}, (_PAIR_ADDRESS_CACHE2 = PAIR_ADDRESS_CACHE) === null || _PAIR_ADDRESS_CACHE2 === void 0 ? void 0 : _PAIR_ADDRESS_CACHE2[tokens[0].address], (_extends2 = {}, _extends2[tokens[1].address] = getCreate2Address(FACTORY_ADDRESSES[tokenA.chainId], solidity.keccak256(['bytes'], [solidity.pack(['address', 'address'], [tokens[0].address, tokens[1].address])]), INIT_CODE_HASH), _extends2)), _extends3));
     }
 
     return PAIR_ADDRESS_CACHE[tokens[0].address][tokens[1].address];
