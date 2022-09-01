@@ -38,6 +38,11 @@ export declare const FACTORY_ADDRESSES: {
     11111: string;
     1: string;
 };
+export declare const INIT_CODE_HASHES: {
+    201910292: string;
+    11111: string;
+    1: string;
+};
 interface PairAddresses {
     [token0Address: string]: {
         [token1Address: string]: string;

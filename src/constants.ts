@@ -51,6 +51,11 @@ export const FACTORY_ADDRESSES = {
   [ChainId.MAINNET]: '0x1005efd7a0ad2ce129479e7f1eb084494510e170',
   [ChainId.SHASTA]: '0xb9fe040dd98a9718805c976f8a899ef17b0f43ed'
 }
+export const INIT_CODE_HASHES = {
+  [ChainId.NILE]: '0xf18ab5ba2b2ea93d5f80bbf9f1f4b2ccc8ad443571e6a3af023346a5dd669249',
+  [ChainId.MAINNET]: '0x515ceede630d54ea899e245e075fe1f8d2574639cfb3fbc20c70fa8b8d9bb884',
+  [ChainId.SHASTA]: '0x515ceede630d54ea899e245e075fe1f8d2574639cfb3fbc20c70fa8b8d9bb884'
+}
 
 // TODO: build that data structure from a simple array of (tokenA, tokenB, pairAddress) to avoid human error when adding pairs...
 

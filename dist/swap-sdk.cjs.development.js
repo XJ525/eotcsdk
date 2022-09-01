@@ -22,7 +22,7 @@ var networks = require('@ethersproject/networks');
 var providers = require('@ethersproject/providers');
 var IUniswapV2Pair = _interopDefault(require('@mcswap/mcswap-v2-core/build/contracts/IUniswapV2Pair.json'));
 
-var _SOLIDITY_TYPE_MAXIMA, _FACTORY_ADDRESSES, _PAIR_ADDRESSES;
+var _SOLIDITY_TYPE_MAXIMA, _FACTORY_ADDRESSES, _INIT_CODE_HASHES, _PAIR_ADDRESSES;
 
 (function (ChainId) {
   ChainId[ChainId["MAINNET"] = 11111] = "MAINNET";
@@ -62,7 +62,8 @@ var SolidityType;
 
 var SOLIDITY_TYPE_MAXIMA = (_SOLIDITY_TYPE_MAXIMA = {}, _SOLIDITY_TYPE_MAXIMA[SolidityType.uint8] = /*#__PURE__*/JSBI.BigInt('0xff'), _SOLIDITY_TYPE_MAXIMA[SolidityType.uint256] = /*#__PURE__*/JSBI.BigInt('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'), _SOLIDITY_TYPE_MAXIMA); // @TRON only
 
-var FACTORY_ADDRESSES = (_FACTORY_ADDRESSES = {}, _FACTORY_ADDRESSES[exports.ChainId.NILE] = '0x227044d0cd57e257b15c8c3bd5608e241b8b02ca', _FACTORY_ADDRESSES[exports.ChainId.MAINNET] = '0x1005efd7a0ad2ce129479e7f1eb084494510e170', _FACTORY_ADDRESSES[exports.ChainId.SHASTA] = '0xb9fe040dd98a9718805c976f8a899ef17b0f43ed', _FACTORY_ADDRESSES); // @TRON
+var FACTORY_ADDRESSES = (_FACTORY_ADDRESSES = {}, _FACTORY_ADDRESSES[exports.ChainId.NILE] = '0x227044d0cd57e257b15c8c3bd5608e241b8b02ca', _FACTORY_ADDRESSES[exports.ChainId.MAINNET] = '0x1005efd7a0ad2ce129479e7f1eb084494510e170', _FACTORY_ADDRESSES[exports.ChainId.SHASTA] = '0xb9fe040dd98a9718805c976f8a899ef17b0f43ed', _FACTORY_ADDRESSES);
+var INIT_CODE_HASHES = (_INIT_CODE_HASHES = {}, _INIT_CODE_HASHES[exports.ChainId.NILE] = '0xf18ab5ba2b2ea93d5f80bbf9f1f4b2ccc8ad443571e6a3af023346a5dd669249', _INIT_CODE_HASHES[exports.ChainId.MAINNET] = '0x515ceede630d54ea899e245e075fe1f8d2574639cfb3fbc20c70fa8b8d9bb884', _INIT_CODE_HASHES[exports.ChainId.SHASTA] = '0x515ceede630d54ea899e245e075fe1f8d2574639cfb3fbc20c70fa8b8d9bb884', _INIT_CODE_HASHES); // @TRON
 
 function buildPairAddresses(list) {
   var res = {};
@@ -1066,7 +1067,7 @@ var Pair = /*#__PURE__*/function () {
     if (((_PAIR_ADDRESS_CACHE = PAIR_ADDRESS_CACHE) === null || _PAIR_ADDRESS_CACHE === void 0 ? void 0 : (_PAIR_ADDRESS_CACHE$t = _PAIR_ADDRESS_CACHE[tokens[0].address]) === null || _PAIR_ADDRESS_CACHE$t === void 0 ? void 0 : _PAIR_ADDRESS_CACHE$t[tokens[1].address]) === undefined) {
       var _PAIR_ADDRESS_CACHE2, _extends2, _extends3;
 
-      PAIR_ADDRESS_CACHE = _extends({}, PAIR_ADDRESS_CACHE, (_extends3 = {}, _extends3[tokens[0].address] = _extends({}, (_PAIR_ADDRESS_CACHE2 = PAIR_ADDRESS_CACHE) === null || _PAIR_ADDRESS_CACHE2 === void 0 ? void 0 : _PAIR_ADDRESS_CACHE2[tokens[0].address], (_extends2 = {}, _extends2[tokens[1].address] = getCreate2Address(FACTORY_ADDRESSES[tokenA.chainId], solidity.keccak256(['bytes'], [solidity.pack(['address', 'address'], [tokens[0].address, tokens[1].address])]), INIT_CODE_HASH), _extends2)), _extends3));
+      PAIR_ADDRESS_CACHE = _extends({}, PAIR_ADDRESS_CACHE, (_extends3 = {}, _extends3[tokens[0].address] = _extends({}, (_PAIR_ADDRESS_CACHE2 = PAIR_ADDRESS_CACHE) === null || _PAIR_ADDRESS_CACHE2 === void 0 ? void 0 : _PAIR_ADDRESS_CACHE2[tokens[0].address], (_extends2 = {}, _extends2[tokens[1].address] = getCreate2Address(FACTORY_ADDRESSES[tokenA.chainId], solidity.keccak256(['bytes'], [solidity.pack(['address', 'address'], [tokens[0].address, tokens[1].address])]), INIT_CODE_HASHES[tokenA.chainId]), _extends2)), _extends3));
     }
 
     return PAIR_ADDRESS_CACHE[tokens[0].address][tokens[1].address];
