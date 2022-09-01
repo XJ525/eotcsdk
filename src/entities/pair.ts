@@ -5,7 +5,7 @@ import { Contract } from '@ethersproject/contracts'
 import { BaseProvider } from '@ethersproject/providers'
 import JSBI from 'jsbi'
 import { pack, keccak256 } from '@ethersproject/solidity'
-import { getCreate2Address } from '@ethersproject/address'
+import { getCreate2Address } from '../address'
 
 import {
   BigintIsh,
