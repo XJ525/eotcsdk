@@ -2,7 +2,11 @@
   "_args": [
     [
       "@ethersproject/address@5.0.3",
+<<<<<<< HEAD
       "/Users/xie/Desktop/tianxing/swap-sdk"
+=======
+      "/Users/xie/Desktop/mc1/mcswap-interface-master/src/swap-sdk"
+>>>>>>> e66d2b37a9bbd747abbf77dd2bfa3786d7fa9aa6
     ]
   ],
   "_development": true,
@@ -33,7 +37,11 @@
   ],
   "_resolved": "https://registry.npmjs.org/@ethersproject/address/-/address-5.0.3.tgz",
   "_spec": "5.0.3",
+<<<<<<< HEAD
   "_where": "/Users/xie/Desktop/tianxing/swap-sdk",
+=======
+  "_where": "/Users/xie/Desktop/mc1/mcswap-interface-master/src/swap-sdk",
+>>>>>>> e66d2b37a9bbd747abbf77dd2bfa3786d7fa9aa6
   "author": {
     "name": "Richard Moore",
     "email": "me@ricmoo.com"
