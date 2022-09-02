@@ -48,12 +48,12 @@ export const SOLIDITY_TYPE_MAXIMA = {
 // @TRON only
 export const FACTORY_ADDRESSES = {
   [ChainId.NILE]: '0x227044d0cd57e257b15c8c3bd5608e241b8b02ca',
-  [ChainId.MAINNET]: '0x1005efd7a0ad2ce129479e7f1eb084494510e170',
+  [ChainId.MAINNET]: '0x28d6a74c2e3a4da074011afef9238b59cf4fd825',
   [ChainId.SHASTA]: '0xb9fe040dd98a9718805c976f8a899ef17b0f43ed'
 }
 export const INIT_CODE_HASHES = {
   [ChainId.NILE]: '0xf18ab5ba2b2ea93d5f80bbf9f1f4b2ccc8ad443571e6a3af023346a5dd669249',
-  [ChainId.MAINNET]: '0x515ceede630d54ea899e245e075fe1f8d2574639cfb3fbc20c70fa8b8d9bb884',
+  [ChainId.MAINNET]: '0xd81a8b57892d57f214f7ee297a246d0c81ad5dd2d7621668ea1705ea13da2f25',
   [ChainId.SHASTA]: '0x515ceede630d54ea899e245e075fe1f8d2574639cfb3fbc20c70fa8b8d9bb884'
 }
 
