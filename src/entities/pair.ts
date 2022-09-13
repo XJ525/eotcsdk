@@ -27,6 +27,10 @@ import { InsufficientReservesError, InsufficientInputAmountError } from '../erro
 import { Token } from './token'
 
 let PAIR_ADDRESS_CACHE: { [token0Address: string]: { [token1Address: string]: string } } = {}
+interface ContractAddress {
+  FACTORY: string
+  INIT_CODE_HASH: string
+}
 
 function getFactoryContract(chainId: ChainId, provider: BaseProvider): Contract {
   // memoize?
@@ -94,7 +98,6 @@ export class Pair {
   */
   public static getAddress(tokenA: Token, tokenB: Token): string {
     const tokens = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA] // does safety checks
-
     if (PAIR_ADDRESS_CACHE?.[tokens[0].address]?.[tokens[1].address] === undefined) {
       PAIR_ADDRESS_CACHE = {
         ...PAIR_ADDRESS_CACHE,
@@ -110,6 +113,25 @@ export class Pair {
     }
 
     return PAIR_ADDRESS_CACHE[tokens[0].address][tokens[1].address]
+  }
+  public static getAddressPor(tokenA: Token, tokenB: Token, { FACTORY, INIT_CODE_HASH }: ContractAddress): string {
+    let PAIR_ADDRESS_CACHES: { [token0Address: string]: { [token1Address: string]: string } } = {}
+    // 检查当前实例是否按地址排序在另一个之前。
+    const tokens = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA] // does safety checks
+    if (PAIR_ADDRESS_CACHES?.[tokens[0].address]?.[tokens[1].address] === undefined) {
+      PAIR_ADDRESS_CACHES = {
+        ...PAIR_ADDRESS_CACHES,
+        [tokens[0].address]: {
+          ...PAIR_ADDRESS_CACHES?.[tokens[0].address],
+          [tokens[1].address]: getCreate2Address(
+            FACTORY,
+            keccak256(['bytes'], [pack(['address', 'address'], [tokens[0].address, tokens[1].address])]),
+            INIT_CODE_HASH
+          )
+        }
+      }
+    }
+    return PAIR_ADDRESS_CACHES[tokens[0].address][tokens[1].address]
   }
 
   private static warningWasDisplayedOnce: boolean = false

@@ -1073,6 +1073,24 @@ var Pair = /*#__PURE__*/function () {
     return PAIR_ADDRESS_CACHE[tokens[0].address][tokens[1].address];
   };
 
+  Pair.getAddressPor = function getAddressPor(tokenA, tokenB, _ref) {
+    var _PAIR_ADDRESS_CACHES, _PAIR_ADDRESS_CACHES$;
+
+    var FACTORY = _ref.FACTORY,
+        INIT_CODE_HASH = _ref.INIT_CODE_HASH;
+    var PAIR_ADDRESS_CACHES = {}; // 检查当前实例是否按地址排序在另一个之前。
+
+    var tokens = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]; // does safety checks
+
+    if (((_PAIR_ADDRESS_CACHES = PAIR_ADDRESS_CACHES) === null || _PAIR_ADDRESS_CACHES === void 0 ? void 0 : (_PAIR_ADDRESS_CACHES$ = _PAIR_ADDRESS_CACHES[tokens[0].address]) === null || _PAIR_ADDRESS_CACHES$ === void 0 ? void 0 : _PAIR_ADDRESS_CACHES$[tokens[1].address]) === undefined) {
+      var _PAIR_ADDRESS_CACHES2, _extends4, _extends5;
+
+      PAIR_ADDRESS_CACHES = _extends({}, PAIR_ADDRESS_CACHES, (_extends5 = {}, _extends5[tokens[0].address] = _extends({}, (_PAIR_ADDRESS_CACHES2 = PAIR_ADDRESS_CACHES) === null || _PAIR_ADDRESS_CACHES2 === void 0 ? void 0 : _PAIR_ADDRESS_CACHES2[tokens[0].address], (_extends4 = {}, _extends4[tokens[1].address] = getCreate2Address(FACTORY, keccak256$1(['bytes'], [pack(['address', 'address'], [tokens[0].address, tokens[1].address])]), INIT_CODE_HASH), _extends4)), _extends5));
+    }
+
+    return PAIR_ADDRESS_CACHES[tokens[0].address][tokens[1].address];
+  };
+
   Pair.getAddressWarning = function getAddressWarning(tokenA, tokenB) {
     if (this.warningWasDisplayedOnce) return;
     this.warningWasDisplayedOnce = true; // const message = [

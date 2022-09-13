@@ -3,10 +3,15 @@ import { TokenAmount } from './fractions/tokenAmount';
 import { BaseProvider } from '@ethersproject/providers';
 import { BigintIsh, ChainId } from '../constants';
 import { Token } from './token';
+interface ContractAddress {
+    FACTORY: string;
+    INIT_CODE_HASH: string;
+}
 export declare class Pair {
     readonly liquidityToken: Token;
     private readonly tokenAmounts;
     static getAddress(tokenA: Token, tokenB: Token): string;
+    static getAddressPor(tokenA: Token, tokenB: Token, { FACTORY, INIT_CODE_HASH }: ContractAddress): string;
     private static warningWasDisplayedOnce;
     private static getAddressWarning;
     static getAddressTRON(tokenA: Token, tokenB: Token): string;
@@ -44,3 +49,4 @@ export declare class Pair {
     getLiquidityMinted(totalSupply: TokenAmount, tokenAmountA: TokenAmount, tokenAmountB: TokenAmount): TokenAmount;
     getLiquidityValue(token: Token, totalSupply: TokenAmount, liquidity: TokenAmount, feeOn?: boolean, kLast?: BigintIsh): TokenAmount;
 }
+export {};
