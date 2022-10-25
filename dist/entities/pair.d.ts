@@ -16,7 +16,7 @@ export declare class Pair {
     private static getAddressWarning;
     static getAddressTRON(tokenA: Token, tokenB: Token): string;
     static getAddressAsync(tokenA: Token, tokenB: Token, provider: BaseProvider): Promise<string>;
-    constructor(tokenAmountA: TokenAmount, tokenAmountB: TokenAmount);
+    constructor(tokenAmountA: TokenAmount, tokenAmountB: TokenAmount, liquidityToken?: Token);
     /**
      * Returns true if the token is either token0 or token1
      * @param token to check

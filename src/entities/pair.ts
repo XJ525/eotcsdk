@@ -181,17 +181,22 @@ export class Pair {
     return pairAddress
   }
 
-  public constructor(tokenAmountA: TokenAmount, tokenAmountB: TokenAmount) {
+  public constructor(tokenAmountA: TokenAmount, tokenAmountB: TokenAmount, liquidityToken?: Token) {
     const tokenAmounts = tokenAmountA.token.sortsBefore(tokenAmountB.token) // does safety checks
       ? [tokenAmountA, tokenAmountB]
       : [tokenAmountB, tokenAmountA]
-    this.liquidityToken = new Token(
-      tokenAmounts[0].token.chainId,
-      Pair.getAddress(tokenAmounts[0].token, tokenAmounts[1].token),
-      18,
-      'EOTC-V2',
-      'Eotc swap'
-    )
+    if (liquidityToken) {
+      this.liquidityToken = liquidityToken
+    } else {
+      this.liquidityToken = new Token(
+        tokenAmounts[0].token.chainId,
+        Pair.getAddress(tokenAmounts[0].token, tokenAmounts[1].token),
+        18,
+        'EOTC-V2',
+        'Eotc swap'
+      )
+    }
+
     this.tokenAmounts = tokenAmounts as [TokenAmount, TokenAmount]
   }
 
